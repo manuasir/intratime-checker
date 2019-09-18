@@ -54,7 +54,7 @@ check_if_weekend(){
 clock_in_out() {
 
     # I will not check if weekend because I will setup crontab for not checking in on weekend
-    if  ! check_if_free_day $1
+    if  ! check_if_free_day $1 && ! check_if_weekend $1
     then
         TOKEN=$(curl -s --location --request POST "$API_URL""$API_LOGIN_PATH" --header "$API_APPLICATION_HEADER" --header "$API_CONTENT_HEADER" --data "user=${USER}&pin=${PASSWORD}" | jq ".USER_TOKEN" -r )
         echo $DATE $TIME
@@ -152,7 +152,7 @@ main() {
         help 1
     fi
     if [ -n ${USER} ] && [ -n ${PASSWORD} ] && [ -n ${ACTION} ]; then
-        clock_in_out
+        clock_in_out $DATE
     else
         help 1
     fi
